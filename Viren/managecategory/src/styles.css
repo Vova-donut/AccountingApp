@@ -1,0 +1,26 @@
+/* --- Admin table look --- */
+.toolbar { display:flex; justify-content:space-between; align-items:center; margin:6px 0 14px; }
+.toolbar .left { display:flex; gap:8px; align-items:center; }
+.toolbar .right { display:flex; gap:8px; }
+
+.table { width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.table thead th { background:#f6f8fb; color:#0f172a; font-weight:600; font-size:14px; padding:12px; border-bottom:1px solid var(--border); }
+.table tbody td { padding:12px; border-bottom:1px solid var(--border); font-size:14px; }
+.table tbody tr:last-child td { border-bottom:none; }
+
+/* Action buttons */
+.btn-icon { display:inline-flex; align-items:center; gap:6px; border-radius:8px; padding:8px 10px; border:1px solid transparent; cursor:pointer; font-size:13px; }
+.btn-blue { background:#1e40af; color:#fff; border-color:#1e40af; }
+.btn-red  { background:#b91c1c; color:#fff; border-color:#b91c1c; }
+.btn-gray { background:#fff; color:#334155; border:1px solid var(--border); }
+
+/* Toggle switch */
+.switch { position:relative; width:44px; height:24px; background:#e5e7eb; border-radius:999px; transition:background .2s; border:1px solid var(--border); cursor:pointer; }
+.switch.on { background:#16a34a; border-color:#16a34a; }
+.knob { position:absolute; top:2px; left:2px; width:20px; height:20px; background:#fff; border-radius:50%; transition:left .18s; }
+.switch.on .knob { left:22px; }
+
+/* Inline inputs in table */
+.input-sm { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; }
+.align-right { text-align:right; }
+.nowrap { white-space:nowrap; }
