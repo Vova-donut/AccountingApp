@@ -1,87 +1,64 @@
-// src/Profile.js
 import React, { useState } from "react";
 import "./Profile.css";
 
-const emailOk = (v) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || "").toLowerCase());
-
-// Mock data for 3 different users
-const initialProfiles = {
-  Customer: {
-    name: "Riya Patel",
-    email: "riya.customer@example.com",
-    phone: "0212345678",
-    address: "12 Queen Street, Auckland, NZ"
-  },
-  Accountant: {
-    name: "Harpreet Singh",
-    email: "harpreet.accountant@example.com",
-    phone: "0229876543",
-    address: "45 Balance Road, Wellington, NZ"
-  },
-  Admin: {
-    name: "Sofia Lee",
-    email: "sofia.admin@example.com",
-    phone: "0205556677",
-    address: "89 Ledger Ave, Christchurch, NZ"
-  }
-};
-
 export default function Profile() {
-  const [activeRole, setActiveRole] = useState("Customer");
-  const [profiles, setProfiles] = useState(initialProfiles);
+  // Simulated logged-in user role (replace later with actual login data)
+  const [userRole] = useState("Customer");
+
+  // Different mock data per role
+  const profiles = {
+    Customer: {
+      name: "Riya Patel",
+      email: "riya.customer@example.com",
+      phone: "0212345678",
+      address: "12 Queen Street, Auckland, NZ"
+    },
+    Accountant: {
+      name: "Harpreet Singh",
+      email: "harpreet.accountant@example.com",
+      phone: "0229876543",
+      address: "45 Balance Road, Wellington, NZ"
+    },
+    Admin: {
+      name: "Sofia Lee",
+      email: "sofia.admin@example.com",
+      phone: "0205556677",
+      address: "89 Ledger Ave, Christchurch, NZ"
+    }
+  };
+
+  const [user, setUser] = useState(profiles[userRole]);
   const [errors, setErrors] = useState({});
   const [msg, setMsg] = useState("");
 
-  const user = profiles[activeRole];
-
-  const validate = (u) => {
+  // Validation
+  const validate = () => {
     const e = {};
-    let anyEmpty = false;
-
-    if (!u.name.trim()) { e.name = "Required"; anyEmpty = true; }
-    if (!u.email.trim()) { e.email = "Required"; anyEmpty = true; }
-    else if (!emailOk(u.email)) e.email = "Invalid email format";
-    if (!u.phone.trim()) { e.phone = "Required"; anyEmpty = true; }
-    else if (u.phone.length < 8) e.phone = "Phone number too short";
-    if (!u.address.trim()) { e.address = "Required"; anyEmpty = true; }
-
-    if (anyEmpty && Object.keys(e).length === 0) {
-      // safety, but practically won't happen
-      e._form = "All fields are required.";
-    }
-    if (anyEmpty) e._form = "All fields are required.";
+    if (!user.name.trim()) e.name = "Full name is required";
+    if (!user.email.trim()) e.email = "Email is required";
+    else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(user.email))
+      e.email = "Invalid email format";
+    if (!user.phone.trim()) e.phone = "Phone is required";
+    else if (user.phone.length < 8) e.phone = "Phone number too short";
+    if (!user.address.trim()) e.address = "Address is required";
     return e;
   };
 
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfiles((prev) => ({
-      ...prev,
-      [activeRole]: {
-        ...prev[activeRole],
-        [name]: value
-      }
-    }));
+    setUser((u) => ({ ...u, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
     setMsg("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const current = profiles[activeRole];
-    const errs = validate(current);
+    const errs = validate();
     setErrors(errs);
-    if (Object.keys(errs).filter((k) => k !== "_form").length === 0) {
-      setMsg(`✅ ${activeRole} profile updated successfully!`);
-      console.log("Updated profiles:", profiles);
+    if (Object.keys(errs).length === 0) {
+      setMsg("✅ Profile updated successfully!");
     }
-  };
-
-  const handleRoleChange = (role) => {
-    setActiveRole(role);
-    setErrors({});
-    setMsg("");
   };
 
   const initials = user.name
@@ -94,139 +71,115 @@ export default function Profile() {
   return (
     <div className="profile-page">
       <div className="profile-layout">
-        {/* LEFT SUMMARY PANEL */}
+        {/* LEFT SIDEBAR */}
         <aside className="profile-sidebar">
           <div className="avatar">{initials}</div>
           <h2 className="sidebar-name">{user.name}</h2>
-          <span className="role-badge">{activeRole}</span>
+          <span className="role-badge">{userRole}</span>
           <p className="sidebar-email">{user.email}</p>
-
-          <div className="role-switch">
-            <p className="role-switch-label">View profile as</p>
-            <div className="role-pill-row">
-              {["Customer", "Accountant", "Admin"].map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  className={
-                    "role-pill" + (activeRole === r ? " role-pill-active" : "")
-                  }
-                  onClick={() => handleRoleChange(r)}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
 
           <div className="sidebar-section">
             <h3>Access summary</h3>
-            {activeRole === "Customer" && (
+            {userRole === "Customer" && (
               <ul>
-                <li>View personal invoices & statements</li>
-                <li>Update contact information</li>
-                <li>View basic account dashboard</li>
+                <li>View invoices & payment history</li>
+                <li>Update contact details</li>
+                <li>Check financial summaries</li>
               </ul>
             )}
-            {activeRole === "Accountant" && (
+            {userRole === "Accountant" && (
               <ul>
-                <li>Manage customer transactions</li>
-                <li>Prepare financial reports</li>
-                <li>Access extended ledger views</li>
+                <li>Manage client transactions</li>
+                <li>Generate reports & statements</li>
+                <li>Access ledger and analytics</li>
               </ul>
             )}
-            {activeRole === "Admin" && (
+            {userRole === "Admin" && (
               <ul>
-                <li>Manage all user accounts & roles</li>
-                <li>Configure organisation settings</li>
-                <li>View system-wide reports</li>
+                <li>Manage users & permissions</li>
+                <li>Control app settings</li>
+                <li>View business performance data</li>
               </ul>
             )}
           </div>
         </aside>
 
-        {/* RIGHT EDITABLE FORM PANEL */}
+        {/* RIGHT MAIN CONTENT */}
         <section className="profile-main">
-          <h1 className="profile-title">Profile details</h1>
+          <h1 className="profile-title">My Profile</h1>
           <p className="profile-sub">
-            Keep your personal information up to date. Changes are only saved for the
-            selected role.
+            Manage and update your personal details below.
           </p>
 
           {msg && <div className="banner ok">{msg}</div>}
-          {errors._form && !msg && <div className="banner err">{errors._form}</div>}
 
-          <form className="profile-form" onSubmit={handleSubmit} noValidate>
+          <form className="profile-form" onSubmit={handleSubmit}>
             <div className="field">
-              <label htmlFor="name">Full Name</label>
+              <label>Full Name</label>
               <input
-                id="name"
-                name="name"
                 type="text"
+                name="name"
                 value={user.name}
                 onChange={handleChange}
-                className={`input ${errors.name ? "input-error" : ""}`}
-                placeholder="Enter your full name"
+                className={errors.name ? "input input-error" : "input"}
+                placeholder="Enter full name"
               />
               {errors.name && <span className="error">{errors.name}</span>}
             </div>
 
             <div className="field">
-              <label htmlFor="email">Email address</label>
+              <label>Email</label>
               <input
-                id="email"
-                name="email"
                 type="email"
+                name="email"
                 value={user.email}
                 onChange={handleChange}
-                className={`input ${errors.email ? "input-error" : ""}`}
+                className={errors.email ? "input input-error" : "input"}
                 placeholder="example@gmail.com"
               />
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
 
             <div className="field">
-              <label htmlFor="phone">Phone number</label>
+              <label>Phone Number</label>
               <input
-                id="phone"
-                name="phone"
                 type="text"
+                name="phone"
                 value={user.phone}
                 onChange={handleChange}
-                className={`input ${errors.phone ? "input-error" : ""}`}
-                placeholder="Enter your phone number"
+                className={errors.phone ? "input input-error" : "input"}
+                placeholder="Enter phone number"
               />
               {errors.phone && <span className="error">{errors.phone}</span>}
             </div>
 
             <div className="field">
-              <label htmlFor="address">Address</label>
+              <label>Address</label>
               <textarea
-                id="address"
                 name="address"
-                rows="3"
                 value={user.address}
                 onChange={handleChange}
-                className={`input textarea ${errors.address ? "input-error" : ""}`}
-                placeholder="Enter your current address"
-              />
+                className={errors.address ? "input input-error" : "input"}
+                rows="3"
+                placeholder="Enter address"
+              ></textarea>
               {errors.address && <span className="error">{errors.address}</span>}
             </div>
 
             <div className="actions">
-              <button type="submit" className="btn-primary">
-                Save changes
+              <button className="btn-primary" type="submit">
+                Save Changes
               </button>
               <button
                 type="button"
                 className="btn-secondary"
                 onClick={() => {
-                  setProfiles(initialProfiles);
-                  setErrors({});
+                  setUser(profiles[userRole]);
                   setMsg("");
+                  setErrors({});
                 }}
               >
-                Reset all
+                Reset
               </button>
             </div>
           </form>
