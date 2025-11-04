@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Inika:wght@400;700&family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --primary:#1F4E79;
+  --accent:#5DADE2;
+  --bg:#EAEAEA;
+  --surface:#FFFFFF;
+  --border:#DBDBDB;
+  --success:#27AE60;
+  --error:#C0392B;
+}
+
+/* Layout */
+.verify-page {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, sans-serif;
+}
+
+.verify-card {
+  width: min(500px, 95%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  padding: 40px 30px 50px;
+  text-align: center;
+}
+
+.verify-title {
+  font-family: "Inika", serif;
+  color: var(--primary);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.verify-sub {
+  color: #444;
+  font-size: 15px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.banner {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  background: #e9f7ef;
+  border: 1px solid #c7e8d1;
+  color: var(--success);
+}
+
+.verify-box {
+  background: #f6f6f6;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 25px 20px;
+}
+
+.verify-box h3 {
+  margin: 10px 0 8px;
+  font-size: 20px;
+  color: var(--primary);
+}
+
+.verify-box p {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.verify-box .icon {
+  font-size: 40px;
+}
+
+.verified {
+  background: #e9f7ef;
+  border-color: #b7e0c4;
+}
+.not-verified {
+  background: #fff6f6;
+  border-color: #f2caca;
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 999px;
+  padding: 10px 26px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: 0.25s;
+  margin-top: 14px;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #173c5a;
+}
+
+.btn-secondary {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+.btn-secondary:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
