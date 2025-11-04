@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>Accounting Logo</title>
+  <!-- Bars -->
+  <rect x="70" y="160" width="70" height="200" rx="16" fill="#B9BDC2"/>
+  <rect x="170" y="120" width="70" height="240" rx="16" fill="#5DADE2"/>
+  <rect x="270" y="80" width="70" height="280" rx="16" fill="#1F4E79"/>
+
+  <!-- Coin with dollar -->
+  <circle cx="360" cy="320" r="70" fill="#1F4E79"/>
+  <text x="360" y="320" text-anchor="middle" dominant-baseline="central"
+        font-family="Inter, Segoe UI, Arial, sans-serif" font-size="88" font-weight="700"
+        fill="#FFFFFF">$</text>
+
+  <!-- Wordmark -->
+  <text x="256" y="470" text-anchor="middle"
+        font-family="Inika, Inter, Segoe UI, Arial, sans-serif" font-size="48" font-weight="700"
+        fill="#1F4E79">ACCOUNTING</text>
+</svg>
+

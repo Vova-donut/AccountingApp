@@ -7,7 +7,7 @@ function HomeLanding() {
   return (
     <div className="page" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
       <div className="card" style={{ maxWidth: 720, width: "100%", textAlign: "center" }}>
-        <img src="/logo192.png" alt="Reviews Logo" style={{ height: 72, width: 72, objectFit: "contain", marginBottom: 12 }} />
+        <img src="/accounting-logo.svg" alt="Accounting Logo" style={{ height: 96, width: 96, objectFit: "contain", marginBottom: 12 }} />
         <h1 style={{ color: "var(--color-primary)" }}>Welcome to Reviews</h1>
         <p className="text-sm" style={{ color: "var(--color-primary)", marginBottom: 16 }}>
           Review customer transactions, add manager feedback, and keep everyone aligned.
