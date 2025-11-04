@@ -23,7 +23,7 @@ export default function CommentModal({ open, onClose, onSubmit }) {
           style={{ width: "100%", padding: 8, resize: "vertical" }}
         />
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 8 }}>
-          <button className="btn" onClick={onClose}>Cancel</button>
+          <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary" onClick={submit}>Save</button>
         </div>
         <small>{200 - text.length} chars left</small>

@@ -13,10 +13,10 @@ export default function CustomerDashboard() {
   }, []);
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="page">
       <h2>Your Transactions & Manager Comments</h2>
       {txns.length === 0 ? <p>No transactions yet.</p> : (
-        <table width="100%" cellPadding="8">
+        <table className="data-table">
           <thead>
             <tr><th>Date</th><th>Category</th><th>Amount</th><th>Comments</th></tr>
           </thead>

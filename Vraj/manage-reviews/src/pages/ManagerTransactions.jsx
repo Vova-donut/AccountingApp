@@ -41,7 +41,7 @@ export default function ManagerTransactions() {
   };
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="page">
       <h2>Customers & Their Transactions</h2>
       {loading && <p>Loading...</p>}
       {!loading && groups.length === 0 && <p>No data.</p>}
@@ -58,4 +58,3 @@ export default function ManagerTransactions() {
     </div>
   );
 }
-

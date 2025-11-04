@@ -8,19 +8,19 @@ export default function CustomerGroup({
   customerName,
   transactions = [],
   onAddComment,
-  onAddTransaction
+  onAddTransaction,
 }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={box}>
-      <button style={header} onClick={() => setOpen(!open)}>
+    <div className="card" style={{ marginBottom: 14, padding: 0 }}>
+      <button className="group-header" onClick={() => setOpen(!open)}>
         <span>{customerName}</span>
-        <span>{open ? "▼" : "▶"} ({transactions.length})</span>
+        <span>{open ? "▾" : "▸"} ({transactions.length})</span>
       </button>
 
       {open && (
-        <div style={content}>
+        <div className="group-content">
           {onAddTransaction && (
             <AddTransactionForm
               customerId={customerId}
@@ -29,7 +29,7 @@ export default function CustomerGroup({
             />
           )}
 
-          <table width="100%" cellPadding="8" style={table} className="data-table">
+          <table className="data-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -41,7 +41,11 @@ export default function CustomerGroup({
             </thead>
             <tbody>
               {transactions.map((txn) => (
-                <TransactionRow key={txn.id} txn={txn} onAddComment={onAddComment} />
+                <TransactionRow
+                  key={txn.id}
+                  txn={txn}
+                  onAddComment={onAddComment}
+                />
               ))}
             </tbody>
           </table>
@@ -54,17 +58,4 @@ export default function CustomerGroup({
     </div>
   );
 }
-
-/* theme */
-const colors = {
-  midnight: "#1F305E",
-  textOnNight: "#FFFFFF",
-  softGrayBg: "#F2F4F8",
-  white: "#FFFFFF",
-  border: "#D1D5DB"
-};
-const box = { border: `1px solid ${colors.border}`, borderRadius: 12, overflow: "hidden", marginBottom: 14, background: colors.softGrayBg };
-const header = { width:"100%", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 14px", background:colors.midnight, color:colors.textOnNight, border:"none", cursor:"pointer", fontWeight:600, fontSize:16 };
-const content = { padding:"12px 14px", background: colors.white };
-const table = { width:"100%", borderCollapse:"separate", borderSpacing:0 };
 
