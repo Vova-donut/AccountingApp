@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { bootstrapTransactions, listTransactionsByCustomer } from "../services/commentsService";
 import { sampleTransactions } from "../data/sampleTransactions";
 
-// simulate logged-in customer
 const CURRENT_CUSTOMER_ID = "cust_001";
 
 export default function CustomerDashboard() {
@@ -19,22 +18,20 @@ export default function CustomerDashboard() {
       {txns.length === 0 ? <p>No transactions yet.</p> : (
         <table width="100%" cellPadding="8">
           <thead>
-            <tr>
-              <th>Date</th><th>Category</th><th>Amount</th><th>Comments</th>
-            </tr>
+            <tr><th>Date</th><th>Category</th><th>Amount</th><th>Comments</th></tr>
           </thead>
           <tbody>
             {txns.map(t => (
               <tr key={t.id}>
                 <td>{t.date}</td>
                 <td>{t.category}</td>
-                <td>${t.amount.toFixed(2)}</td>
+                <td>${Number(t.amount).toFixed(2)}</td>
                 <td>
                   {t.comments?.length ? (
                     <ul style={{ margin: 0, paddingLeft: 18 }}>
                       {t.comments.map(c => (
                         <li key={c.id}>
-                          <strong>{c.authorRole}</strong>: {c.text}{" "}
+                          <strong>{c.authorRole}</strong>: {String(c.text)}{" "}
                           <small>({new Date(c.ts).toLocaleString()})</small>
                         </li>
                       ))}

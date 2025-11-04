@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { bootstrapTransactions, listAllTransactions, addManagerComment } from "../services/commentsService";
-import { addTransaction } from "../services/commentsService"; // <- new
+import { bootstrapTransactions, listAllTransactions, addManagerComment, addTransaction } from "../services/commentsService";
 import { sampleTransactions } from "../data/sampleTransactions";
 import CustomerGroup from "../components/CustomerGroup";
 
@@ -13,7 +12,7 @@ export default function ManagerTransactions() {
   async function refresh() {
     setLoading(true);
     const data = await listAllTransactions();
-    setTxns(data);
+    setTxns(Array.isArray(data) ? data : []);
     setLoading(false);
   }
 
@@ -25,14 +24,10 @@ export default function ManagerTransactions() {
   const groups = useMemo(() => {
     const map = new Map();
     for (const t of txns) {
-      if (!map.has(t.customerId)) {
-        map.set(t.customerId, { customerName: t.customerName, items: [] });
-      }
+      if (!map.has(t.customerId)) map.set(t.customerId, { customerName: t.customerName, items: [] });
       map.get(t.customerId).items.push(t);
     }
-    return Array.from(map.entries()).map(([customerId, { customerName, items }]) => ({
-      customerId, customerName, items
-    }));
+    return Array.from(map, ([customerId, { customerName, items }]) => ({ customerId, customerName, items }));
   }, [txns]);
 
   const handleAddComment = async (transactionId, text) => {
@@ -40,15 +35,15 @@ export default function ManagerTransactions() {
     await refresh();
   };
 
-  const handleAddTransaction = async ({ customerId, customerName, date, category, amount }) => {
-    await addTransaction({ customerId, customerName, date, category, amount });
+  const handleAddTransaction = async (p) => {
+    await addTransaction(p);
     await refresh();
   };
 
   return (
     <div style={{ padding: 24 }}>
       <h2>Customers & Their Transactions</h2>
-      {loading && <p>Loading…</p>}
+      {loading && <p>Loading...</p>}
       {!loading && groups.length === 0 && <p>No data.</p>}
       {!loading && groups.map(g => (
         <CustomerGroup

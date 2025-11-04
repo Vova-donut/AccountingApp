@@ -1,4 +1,6 @@
 const LS_KEY = "transactions_demo";
+// in the browser console
+localStorage.removeItem("transactions_demo")
 
 function loadAll() {
   const raw = localStorage.getItem(LS_KEY);
@@ -37,13 +39,14 @@ export async function addManagerComment({ transactionId, authorId, text }) {
   saveAll(all);
   return newComment;
 }
+
 export async function addTransaction({ customerId, customerName, date, category, amount }) {
   const all = loadAll() || [];
   const txn = {
     id: crypto.randomUUID(),
     customerId,
     customerName,
-    date,        // "YYYY-MM-DD"
+    date,
     category,
     amount: Number(amount),
     comments: []
