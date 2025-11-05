@@ -26,7 +26,7 @@ button{ cursor:pointer; }
 .actions{ display:flex; gap:12px; }
 
 /* Buttons */
-.btn{ height:40px; padding:0 16px; border-radius:8px; border:1px solid transparent; font-weight:600; }
+.btn{ height:40px; padding:0 16px; border-radius:12px; border:1px solid transparent; font-weight:600; }
 .btn-primary{ background:var(--blue-900); color:#fff; }
 .btn-primary:hover{ background:var(--blue-300); }
 .btn-outline{ background:#fff; color:var(--blue-900); border-color:var(--blue-900); }
@@ -45,6 +45,10 @@ button{ cursor:pointer; }
 .filters{ display:flex; gap:12px; margin:8px 0 16px; }
 .select, .input{ height:36px; padding:0 10px; border:1px solid var(--border); border-radius:8px; background:#fff; }
 
+/* --- Pills & no shadow utilities --- */
+.btn-pill { border-radius: 12px; }             /* сильно округлённые кнопки */
+.no-shadow { box-shadow: none !important; }      /* универсально убрать тень */
+
 /* Table */
 .table{ background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
 .table table{ width:100%; border-collapse:collapse; font-size:16px; }
@@ -53,7 +57,7 @@ button{ cursor:pointer; }
 .table .td-right{ text-align:right; font-variant-numeric: tabular-nums; }
 
 /* Badges */
-.badge{ display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; }
+.badge{ display:inline-block; padding:2px 8px; border-radius:12px; font-size:12px; }
 .badge.income{ background:#e8f7ee; color:#27AE60; }
 .badge.expense{ background:#fff0f0; color:#C0392B; }
 
