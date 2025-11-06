@@ -34,6 +34,7 @@ export default function CustomerGroup({
               <tr>
                 <th>Date</th>
                 <th>Category</th>
+                <th>Type</th>
                 <th>Amount</th>
                 <th>Action</th>
                 <th>Latest Comment</th>
@@ -58,4 +59,3 @@ export default function CustomerGroup({
     </div>
   );
 }
-

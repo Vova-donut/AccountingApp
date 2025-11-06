@@ -15,17 +15,23 @@ export default function CustomerDashboard() {
   return (
     <div className="page">
       <h2>Your Transactions & Manager Comments</h2>
+
       {txns.length === 0 ? <p>No transactions yet.</p> : (
         <table className="data-table">
           <thead>
-            <tr><th>Date</th><th>Category</th><th>Amount</th><th>Comments</th></tr>
+            <tr><th>Date</th><th>Category</th><th>Type</th><th>Amount</th><th>Comments</th></tr>
           </thead>
           <tbody>
             {txns.map(t => (
               <tr key={t.id}>
                 <td>{t.date}</td>
                 <td>{t.category}</td>
-                <td>${Number(t.amount).toFixed(2)}</td>
+                <td style={{ textTransform: "capitalize" }}>
+                  {(String(t.type||"").toLowerCase()) || ((String(t.category).toLowerCase().includes("salary") || String(t.category).toLowerCase().includes("freelance") || String(t.category).toLowerCase().includes("bonus") || String(t.category).toLowerCase().includes("refund") || String(t.category).toLowerCase().includes("reimb")) ? "income" : "expense")}
+                </td>
+                <td style={{ color: ((String(t.type||"").toLowerCase()) || ((String(t.category).toLowerCase().includes("salary") || String(t.category).toLowerCase().includes("freelance") || String(t.category).toLowerCase().includes("bonus") || String(t.category).toLowerCase().includes("refund") || String(t.category).toLowerCase().includes("reimb")) ? "income" : "expense")) === "income" ? "#27AE60" : "#C0392B" }}>
+                  ${Number(t.amount).toFixed(2)}
+                </td>
                 <td>
                   {t.comments?.length ? (
                     <ul style={{ margin: 0, paddingLeft: 18 }}>

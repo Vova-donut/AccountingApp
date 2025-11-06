@@ -7,12 +7,18 @@ export default function TransactionRow({ txn, onAddComment }) {
   const date = String(txn.date ?? "");
   const category = String(txn.category ?? "");
   const amount = Number(txn.amount ?? 0);
+  const derivedType = (String(txn.type || "").trim().toLowerCase()) ||
+    ((category.toLowerCase().includes("salary") || category.toLowerCase().includes("freelance") || category.toLowerCase().includes("bonus") || category.toLowerCase().includes("refund") || category.toLowerCase().includes("reimb")) ? "income" : "expense");
+  const isIncome = derivedType === "income";
 
   return (
     <tr>
       <td>{date}</td>
       <td>{category}</td>
-      <td className="amount-cell">${amount.toFixed(2)}</td>
+      <td style={{ textTransform: "capitalize" }}>{derivedType}</td>
+      <td className="amount-cell" style={{ color: isIncome ? "#27AE60" : "#C0392B" }}>
+        ${amount.toFixed(2)}
+      </td>
       <td className="action-cell">
         <button className="btn" onClick={() => setOpen(true)}>Comment</button>
         <CommentModal

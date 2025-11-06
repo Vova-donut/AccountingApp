@@ -1,8 +1,31 @@
 import React from "react";
 
-export default function Filters({ type, setType, category, setCategory, period, setPeriod }) {
+export default function Filters({
+  customers = [],
+  customerId = "",
+  setCustomerId = () => {},
+  type,
+  setType,
+  category,
+  setCategory,
+  period,
+  setPeriod,
+}) {
   return (
     <div className="filters">
+      <label>
+        Customer:
+        <select
+          className="input"
+          value={customerId}
+          onChange={(e) => setCustomerId(e.target.value)}
+        >
+          {customers.map((c) => (
+            <option key={c.id} value={c.id}>{c.name}</option>
+          ))}
+        </select>
+      </label>
+
       <label>
         Type:
         <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
