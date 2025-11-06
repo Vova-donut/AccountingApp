@@ -5,16 +5,23 @@ const emailOk = (v) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || "").toLowerCase());
 
 export default function SignUp() {
-  const [mode, setMode] = useState("signup"); // 'signup' | 'login'
+  const [mode, setMode] = useState("signup");
   const [role, setRole] = useState("Customer");
 
-  const [signup, setSignup] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [signup, setSignup] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    password: "",
+    confirm: "",
+  });
   const [login, setLogin] = useState({ email: "", password: "" });
 
   const [sErr, setSErr] = useState({});
   const [lErr, setLErr] = useState({});
-  const [sFormMsg, setSFormMsg] = useState(""); // general banner for signup
-  const [lFormMsg, setLFormMsg] = useState(""); // general banner for login
+  const [sFormMsg, setSFormMsg] = useState("");
+  const [lFormMsg, setLFormMsg] = useState("");
 
   // ---------- validators ----------
   function validateSignup(values) {
@@ -24,10 +31,20 @@ export default function SignUp() {
     if (!values.name.trim()) { e.name = "Required"; anyEmpty = true; }
     if (!values.email.trim()) { e.email = "Required"; anyEmpty = true; }
     else if (!emailOk(values.email)) e.email = "Enter a valid email";
+
+    if (!values.phone.trim()) { e.phone = "Required"; anyEmpty = true; }
+    else if (!/^[0-9]{7,15}$/.test(values.phone))
+      e.phone = "Enter a valid phone number";
+
+    if (!values.address.trim()) { e.address = "Required"; anyEmpty = true; }
+
     if (!values.password) { e.password = "Required"; anyEmpty = true; }
-    else if (values.password.length < 6) e.password = "Use at least 6 characters";
+    else if (values.password.length < 6)
+      e.password = "Use at least 6 characters";
+
     if (!values.confirm) { e.confirm = "Required"; anyEmpty = true; }
-    else if (values.confirm !== values.password) e.confirm = "Passwords do not match";
+    else if (values.confirm !== values.password)
+      e.confirm = "Passwords do not match";
 
     return { e, anyEmpty };
   }
@@ -35,11 +52,9 @@ export default function SignUp() {
   function validateLogin(values) {
     const e = {};
     let anyEmpty = false;
-
     if (!values.email.trim()) { e.email = "Required"; anyEmpty = true; }
     else if (!emailOk(values.email)) e.email = "Enter a valid email";
     if (!values.password) { e.password = "Required"; anyEmpty = true; }
-
     return { e, anyEmpty };
   }
 
@@ -47,7 +62,6 @@ export default function SignUp() {
   function onSignupChange(e) {
     const { name, value } = e.target;
     setSignup((f) => ({ ...f, [name]: value }));
-    // live-clear field error
     if (sErr[name]) setSErr((prev) => ({ ...prev, [name]: undefined }));
     setSFormMsg("");
   }
@@ -64,9 +78,15 @@ export default function SignUp() {
     setSErr(errs);
     setSFormMsg(anyEmpty ? "All fields are required." : "");
     if (Object.values(errs).filter(Boolean).length === 0) {
-      // success (no popups)
       setSFormMsg("✓ Looks good (demo).");
-      setSignup({ name: "", email: "", password: "", confirm: "" });
+      setSignup({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        password: "",
+        confirm: "",
+      });
     }
   }
 
@@ -87,7 +107,9 @@ export default function SignUp() {
         {/* LEFT PANEL */}
         <aside className="left">
           <div className="left-inner">
-            <h1 className="brand-title">Kia ora, welcome to <br />Accounting App</h1>
+            <h1 className="brand-title">
+              Kia ora, welcome to <br />Accounting App
+            </h1>
             <p className="tagline">Manage your business finances effortlessly.</p>
             <p className="desc">
               Track income, expenses, and reports in one secure dashboard.
@@ -130,7 +152,7 @@ export default function SignUp() {
             {mode === "signup" ? "Create your account" : "Welcome back"}
           </h2>
 
-          {/* Role chips */}
+          {/* Role Chips */}
           <div className="role-row" role="tablist" aria-label="Select role">
             {["Admin", "Customer", "Accountant"].map((r) => (
               <button
@@ -180,6 +202,32 @@ export default function SignUp() {
                 {sErr.email && <div className="msg-error">{sErr.email}</div>}
               </div>
 
+              <div className={`field ${sErr.phone ? "invalid" : ""}`}>
+                <input
+                  className="input"
+                  name="phone"
+                  type="tel"
+                  placeholder="Phone number"
+                  value={signup.phone}
+                  onChange={onSignupChange}
+                  aria-invalid={!!sErr.phone}
+                />
+                {sErr.phone && <div className="msg-error">{sErr.phone}</div>}
+              </div>
+
+              <div className={`field ${sErr.address ? "invalid" : ""}`}>
+                <input
+                  className="input"
+                  name="address"
+                  type="text"
+                  placeholder="Address"
+                  value={signup.address}
+                  onChange={onSignupChange}
+                  aria-invalid={!!sErr.address}
+                />
+                {sErr.address && <div className="msg-error">{sErr.address}</div>}
+              </div>
+
               <div className={`field ${sErr.password ? "invalid" : ""}`}>
                 <input
                   className="input"
@@ -206,11 +254,19 @@ export default function SignUp() {
                 {sErr.confirm && <div className="msg-error">{sErr.confirm}</div>}
               </div>
 
-              <div className="hint">Creating as: <strong>{role}</strong></div>
+              <div className="hint">
+                Creating as: <strong>{role}</strong>
+              </div>
 
               <div className="actions">
-                <button className="btn-primary" type="submit">Create</button>
-                <button className="btn-secondary" type="button" onClick={() => setMode("login")}>
+                <button className="btn-primary" type="submit">
+                  Create
+                </button>
+                <button
+                  className="btn-secondary"
+                  type="button"
+                  onClick={() => setMode("login")}
+                >
                   Switch to Log in
                 </button>
               </div>
@@ -222,7 +278,6 @@ export default function SignUp() {
                   {lFormMsg}
                 </div>
               )}
-
               <div className={`field ${lErr.email ? "invalid" : ""}`}>
                 <input
                   className="input"
@@ -235,7 +290,6 @@ export default function SignUp() {
                 />
                 {lErr.email && <div className="msg-error">{lErr.email}</div>}
               </div>
-
               <div className={`field ${lErr.password ? "invalid" : ""}`}>
                 <input
                   className="input"
@@ -248,12 +302,18 @@ export default function SignUp() {
                 />
                 {lErr.password && <div className="msg-error">{lErr.password}</div>}
               </div>
-
-              <div className="hint">Logging in as: <strong>{role}</strong></div>
-
+              <div className="hint">
+                Logging in as: <strong>{role}</strong>
+              </div>
               <div className="actions">
-                <button className="btn-primary" type="submit">Log in</button>
-                <button className="btn-secondary" type="button" onClick={() => setMode("signup")}>
+                <button className="btn-primary" type="submit">
+                  Log in
+                </button>
+                <button
+                  className="btn-secondary"
+                  type="button"
+                  onClick={() => setMode("signup")}
+                >
                   Switch to Create
                 </button>
               </div>
