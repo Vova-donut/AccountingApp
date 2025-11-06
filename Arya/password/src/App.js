@@ -1,15 +1,16 @@
 import React from "react";
-import "./App.css";
-import EmailVerification from "./EmailVerification";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 
 function App() {
   return (
-    <div className="App">
-      {/* Show only one screen at a time */}
-      {/* <EmailVerification /> */}
-      <ForgotPassword />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ForgotPassword />} />
+        <Route path="/reset" element={<ResetPassword />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
