@@ -16,8 +16,8 @@ export default function SignUp() {
     password: "",
     confirm: "",
   });
-  const [login, setLogin] = useState({ email: "", password: "" });
 
+  const [login, setLogin] = useState({ email: "", password: "" });
   const [sErr, setSErr] = useState({});
   const [lErr, setLErr] = useState({});
   const [sFormMsg, setSFormMsg] = useState("");
@@ -65,6 +65,7 @@ export default function SignUp() {
     if (sErr[name]) setSErr((prev) => ({ ...prev, [name]: undefined }));
     setSFormMsg("");
   }
+
   function onLoginChange(e) {
     const { name, value } = e.target;
     setLogin((f) => ({ ...f, [name]: value }));
@@ -152,20 +153,22 @@ export default function SignUp() {
             {mode === "signup" ? "Create your account" : "Welcome back"}
           </h2>
 
-          {/* Role Chips */}
-          <div className="role-row" role="tablist" aria-label="Select role">
-            {["Admin", "Customer", "Accountant"].map((r) => (
-              <button
-                key={r}
-                type="button"
-                className={`role-chip ${role === r ? "selected" : ""}`}
-                onClick={() => setRole(r)}
-                aria-pressed={role === r}
-              >
-                {r}
-              </button>
-            ))}
-          </div>
+          {/* Role Chips only visible in signup */}
+          {mode === "signup" && (
+            <div className="role-row" role="tablist" aria-label="Select role">
+              {["Customer", "Accountant"].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  className={`role-chip ${role === r ? "selected" : ""}`}
+                  onClick={() => setRole(r)}
+                  aria-pressed={role === r}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Forms */}
           {mode === "signup" ? (
@@ -278,6 +281,7 @@ export default function SignUp() {
                   {lFormMsg}
                 </div>
               )}
+              
               <div className={`field ${lErr.email ? "invalid" : ""}`}>
                 <input
                   className="input"
@@ -290,6 +294,7 @@ export default function SignUp() {
                 />
                 {lErr.email && <div className="msg-error">{lErr.email}</div>}
               </div>
+
               <div className={`field ${lErr.password ? "invalid" : ""}`}>
                 <input
                   className="input"
@@ -302,9 +307,7 @@ export default function SignUp() {
                 />
                 {lErr.password && <div className="msg-error">{lErr.password}</div>}
               </div>
-              <div className="hint">
-                Logging in as: <strong>{role}</strong>
-              </div>
+
               <div className="actions">
                 <button className="btn-primary" type="submit">
                   Log in
