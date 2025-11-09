@@ -1,5 +1,25 @@
 import React, { useState } from "react";
 import "./SignUp.css";
+import { auth, db, now } from "./firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+
+// Decide final role + blocked flag based on requestedRole from the form
+function deriveRole(requestedRole) {
+  // If user signs up as Customer → allow immediately
+  if (requestedRole === "customer") {
+    return {
+      role: "customer",
+      blocked: false,
+    };
+  }
+
+  // For manager / accountant / admin we require admin approval
+  return {
+    role: "pending",  // user is not active yet
+    blocked: true,
+  };
+}
 
 const emailOk = (v) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || "").toLowerCase());
@@ -49,13 +69,68 @@ export default function SignUp() {
     return { e, anyEmpty };
   }
 
-  function validateLogin(values) {
+  function validateSignup(values) {
     const e = {};
     let anyEmpty = false;
+
     if (!values.email.trim()) { e.email = "Required"; anyEmpty = true; }
-    else if (!emailOk(values.email)) e.email = "Enter a valid email";
+
     if (!values.password) { e.password = "Required"; anyEmpty = true; }
+    else if (values.password.length < 6)
+      e.password = "Use at least 6 characters";
+
     return { e, anyEmpty };
+  }
+
+
+  async function submitLogin(e) {
+    e.preventDefault();
+
+    // 1) Validate login form (reuse your existing validator)
+    const { e: errs, anyEmpty } = validateSignup(login);
+    setLErr(errs);
+
+    if (Object.values(errs).filter(Boolean).length > 0) {
+      setLFormMsg(anyEmpty ? "All fields are required." : "Please fix the highlighted fields.");
+      return;
+    }
+
+    setLFormMsg("Signing in...");
+    try {
+      const { email, password } = login;
+
+      // 2) Sign in with Firebase Auth
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      const uid = cred.user.uid;
+
+      // 3) Load user profile from Firestore: users/{uid}
+      const snap = await getDoc(doc(db, "users", uid));
+      if (!snap.exists()) {
+        // If there is no profile doc, this is an inconsistent state
+        setLFormMsg("Profile not found. Please contact support.");
+        return;
+      }
+
+      const data = snap.data();
+      const { role: userRole, blocked } = data;
+
+      // 4) Decide what to show based on role + blocked
+      if (blocked) {
+        setLFormMsg("Your account is pending approval. Please wait for an admin to approve your access.");
+      } else {
+        // Active account: can continue to dashboards
+        setLFormMsg(`✓ Logged in as ${userRole}.`);
+        // Later: navigate to /customer or /accountant dashboard
+      }
+
+      // Optionally clear password
+      setLogin((prev) => ({ ...prev, password: "" }));
+
+    } catch (err) {
+      console.error(err);
+      // Typical errors: wrong password, user not found, etc.
+      setLFormMsg(err.message || "Login failed. Please check your credentials.");
+    }
   }
 
   // ---------- handlers ----------
@@ -73,13 +148,51 @@ export default function SignUp() {
     setLFormMsg("");
   }
 
-  function submitSignup(e) {
-    e.preventDefault();
+  async function submitSignup(e) {
+    e.preventDefault(); // prevent page reload
+
+    // 1) Run validation first
     const { e: errs, anyEmpty } = validateSignup(signup);
     setSErr(errs);
-    setSFormMsg(anyEmpty ? "All fields are required." : "");
-    if (Object.values(errs).filter(Boolean).length === 0) {
-      setSFormMsg("✓ Looks good (demo).");
+
+    // If there are any validation errors, show a message and stop
+    if (Object.values(errs).filter(Boolean).length > 0) {
+      setSFormMsg(anyEmpty ? "All fields are required." : "Please fix the highlighted fields.");
+      return;
+    }
+
+    setSFormMsg(""); // clear previous top message
+
+    try {
+      // 2) Read values from signup state
+      const { email, password, name, phone, address } = signup;
+
+      // Convert UI role ("Customer" / "Accountant") to backend string ("customer" / "accountant")
+      const requestedRole = role.toLowerCase(); // "Customer" -> "customer"
+
+      // 3) Create user in Firebase Auth
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = cred.user.uid;
+
+      // 4) Decide final role + blocked using our helper
+      const { role: finalRole, blocked } = deriveRole(requestedRole);
+
+      // 5) Create profile document in Firestore: users/{uid}
+      await setDoc(doc(db, "users", uid), {
+        email,
+        displayName: name,        // we store it as displayName in users
+        phone,
+        address,
+        role: finalRole,          // "customer" or "pending"
+        requestedRole,            // what user originally chose
+        blocked,
+        approvedBy: null,
+        approvedAt: null,
+        createdAt: now(),         // server-side timestamp
+      });
+
+      // 6) Show success message and optionally reset form
+      setSFormMsg("✓ Account created successfully.");
       setSignup({
         name: "",
         email: "",
@@ -88,17 +201,15 @@ export default function SignUp() {
         password: "",
         confirm: "",
       });
-    }
-  }
 
-  function submitLogin(e) {
-    e.preventDefault();
-    const { e: errs, anyEmpty } = validateLogin(login);
-    setLErr(errs);
-    setLFormMsg(anyEmpty ? "All fields are required." : "");
-    if (Object.values(errs).filter(Boolean).length === 0) {
-      setLFormMsg("✓ Ready to log in (demo).");
-      setLogin({ email: "", password: "" });
+      // Later you can redirect:
+      // - if finalRole === "customer" -> go to customer dashboard
+      // - if blocked === true -> show "Pending approval" page
+
+    } catch (err) {
+      console.error(err);
+      // Show error message from Firebase or fallback
+      setSFormMsg(err.message || "Something went wrong during signup.");
     }
   }
 
@@ -281,7 +392,7 @@ export default function SignUp() {
                   {lFormMsg}
                 </div>
               )}
-              
+
               <div className={`field ${lErr.email ? "invalid" : ""}`}>
                 <input
                   className="input"
