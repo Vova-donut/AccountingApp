@@ -13,6 +13,7 @@ export default function ForgotPassword() {
     setMsg("");
     setError("");
 
+    // Validate email
     if (!email.trim()) {
       setError("Email is required.");
       return;
@@ -24,18 +25,20 @@ export default function ForgotPassword() {
     }
 
     try {
-      // send password reset link via Firebase
-      await sendPasswordResetEmail(auth, email, {
-        url: "http://localhost:3000/reset", // redirect link
-        handleCodeInApp: true,
-      });
-      setMsg("✅ Password reset email sent successfully!");
+      // Send password reset email using Firebase default flow
+      await sendPasswordResetEmail(auth, email);
+
+      setMsg("✅ Password reset email sent! Check your inbox.");
       setEmail("");
     } catch (err) {
       console.error(err);
-      if (err.code === "auth/user-not-found")
+      if (err.code === "auth/user-not-found") {
         setError("No user found with that email.");
-      else setError("Failed to send reset link. Try again.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Invalid email address.");
+      } else {
+        setError("Failed to send reset link. Try again later.");
+      }
     }
   };
 
@@ -62,7 +65,7 @@ export default function ForgotPassword() {
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => (window.location.href = "http://localhost:3000")}
+            onClick={() => (window.location.href = "/")} // back to login page
           >
             Back to Login
           </button>

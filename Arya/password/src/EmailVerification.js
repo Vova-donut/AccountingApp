@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import "./EmailVerification.css";
 
 export default function EmailVerification() {
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(false); // now we can use it
   const [msg, setMsg] = useState("");
 
+  // Function to resend verification email
   const resendEmail = () => {
     setMsg("✉️ Verification email sent again! Please check your inbox.");
+    setTimeout(() => setMsg(""), 4000);
+  };
+
+  // Function to simulate email verification
+  const verifyEmail = () => {
+    setVerified(true);
+    setMsg("✅ Your email has been verified!");
     setTimeout(() => setMsg(""), 4000);
   };
 
@@ -33,13 +41,18 @@ export default function EmailVerification() {
             <button className="btn-primary" onClick={resendEmail}>
               Resend Verification
             </button>
+            <button className="btn-secondary" onClick={verifyEmail}>
+              Simulate Verification
+            </button>
           </div>
         ) : (
           <div className="verify-box verified">
             <div className="icon">✅</div>
             <h3>Email Verified</h3>
             <p>Your account is now fully active and secure.</p>
-            <button className="btn-secondary">Go to Dashboard</button>
+            <button className="btn-secondary">
+              Go to Dashboard
+            </button>
           </div>
         )}
       </div>
