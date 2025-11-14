@@ -1,0 +1,73 @@
+:root {
+  --bg: #f7f8fa;
+  --card: #ffffff;
+  --text: #111;
+  --muted: #666;
+  --primary: #1F4E79;
+  --danger: #c0392b;
+  --border: #e5e7eb;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; color: var(--text); background: var(--bg); }
+a { color: var(--primary); text-decoration: none; }
+nav a { padding: 6px 10px; border-radius: 8px; }
+nav a.active { background: rgba(255,255,255,0.2); color: #fff; }
+
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--primary); color: #fff; padding: 12px 16px;
+}
+.topbar .spacer { flex: 1; }
+.container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.row { display: flex; align-items: center; }
+.col { display: flex; flex-direction: column; }
+.center-between { justify-content: space-between; width: 100%; }
+.gap { gap: 12px; }
+
+.btn { border: 1px solid var(--border); background: #fff; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+.btn:hover { filter: brightness(0.98); }
+.btn.primary { background: var(--primary); color: #fff; border-color: transparent; }
+.btn.danger { background: var(--danger); color: #fff; border-color: transparent; }
+
+input, select {
+  padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border);
+  background: #fff;
+}
+.search { width: 320px; }
+
+.table_wrap { overflow: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid var(--border); padding: 10px; }
+th { text-align: left; color: var(--muted); font-weight: 600; }
+td { vertical-align: middle; }
+
+.status { padding: 4px 8px; border-radius: 999px; font-size: 12px; text-transform: capitalize; }
+.status.active { background: #e8f5e9; }
+.status.blocked { background: #fdecea; }
+
+.muted { color: var(--muted); }
+.alert {
+  background: #fdecea; color: #b71c1c; border: 1px solid #f5c6cb;
+  padding: 10px; border-radius: 10px; margin-bottom: 8px;
+}
+
+.modal_backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+  display: grid; place-items: center; padding: 16px; z-index: 1000;
+}
+.modal_card {
+  background: #fff; border-radius: 14px; padding: 18px; width: 100%; max-width: 420px;
+  border: 1px solid var(--border);
+}
+
+.skeleton {
+  border: 1px dashed var(--border);
+  border-radius: 12px; padding: 16px; color: var(--muted);
+}
